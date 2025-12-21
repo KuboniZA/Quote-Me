@@ -5,23 +5,23 @@ const quote = ref({})
 const isLoading = ref(true)
 const error = ref(null)
 
-const fetchQuote = async () => {
-  isLoading.value = true
-  error.value = null
-  try {
-    const response = await fetch('https://api.quotable.io')
-    if (!response.ok) {
-      throw new Error('Failed to fetch a quote.')
-    }
-    const data = await response.json()
-    quote.value = data // API returns a single quote object here.
-  } catch (err) {
-    error.value = err
-    console.error(err)
-  } finally {
-    isLoading.value = false
-  }
-}
+// const fetchQuote = async () => {
+//   isLoading.value = true
+//   error.value = null
+//   try {
+//     const response = await fetch('https://api.quotable.io')
+//     if (!response.ok) {
+//       throw new Error('Failed to fetch a quote.')
+//     }
+//     const data = await response.json()
+//     quote.value = data // API returns a single quote object here.
+//   } catch (err) {
+//     error.value = err
+//     console.error(err)
+//   } finally {
+//     isLoading.value = false
+//   }
+// }
 
 onMounted(() => {
   fetchQuote()
@@ -29,25 +29,52 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="quote-container">
-    <div v-if="isLoading">Hang tight!<br />Getting you an awesome quote...</div>
-    <div v-else-if="error">
-      <p>Error: {{ error.message }}</p>
+  <div class="logic-container">
+    <div class="quote-container">
+      <div v-if="isLoading">Hang tight!<br />Getting you an awesome quote...</div>
+      <div v-else-if="error">
+        <p>Error: {{ error.message }}</p>
+      </div>
+      <div v-else-if="quote.content">
+        <p>{{ quote.content }}</p>
+        <p class="quote-author">{{ quote.author }}</p>
+      </div>
+      <button @click="fetchQuote">Get a quote</button>
     </div>
-    <div v-else-if="quote.content">
-      <p>{{ quote.content }}</p>
-      <p class="quote-author">{{ quote.author }}</p>
-    </div>
-    <button @click="fetchQuote">Get a quote</button>
   </div>
 </template>
 <style scoped>
+.logic-container {
+  display: flex;
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
 .quote-container {
-  border: 2px solid red;
+  border: 1px solid rgb(154, 207, 225);
+  border-radius: 5px;
   position: absolute;
-  top: 5rem;
-  left: 5rem;
-  height: 5rem;
-  width: 5rem;
+  min-height: 10rem;
+  width: 50rem;
+  font-size: 1.5rem;
+  padding: 20px;
+  box-shadow: 5px 5px 7px 0.3px black;
+}
+button {
+  position: absolute;
+  top: 14rem;
+  left: 20rem;
+  width: 8rem;
+  height: 3rem;
+  border-radius: 1000px;
+  border: none;
+  box-shadow: 5px 5px 7px 0.3px black;
+}
+button:hover {
+  cursor: pointer;
 }
 </style>
