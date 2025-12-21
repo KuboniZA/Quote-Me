@@ -1,9 +1,10 @@
 <script setup>
-  import QuotesView from './components/QuotesView.vue';
+import QuotesView from '@/components/QuotesView.vue'
 </script>
 
 <template>
   <QuotesView />
+
   <RouterView />
 </template>
 
