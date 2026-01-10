@@ -1,9 +1,14 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
-const quote = ref({})
+const quote = ref<Quote | null>(null)
 const isLoading = ref(true)
-const error = ref(null)
+const error = ref<Error | null>(null)
+
+interface Quote {
+  content: string
+  author: string
+}
 
 const fetchQuote = async () => {
   isLoading.value = true
@@ -14,10 +19,17 @@ const fetchQuote = async () => {
       throw new Error('Failed to fetch a quote.')
     }
     const data = await response.json()
-    quote.value = data // API returns a single quote object here.
-  } catch (err) {
-    error.value = err
-    console.error(err)
+    quote.value = {
+      content: data[0].q,
+      author: data[0].a,
+    }
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      error.value = err
+      console.error(err)
+    } else {
+      error.value = new Error(String(err))
+    }
   } finally {
     isLoading.value = false
   }
@@ -35,7 +47,7 @@ onMounted(() => {
       <div v-else-if="error">
         <p>Error: {{ error.message }}</p>
       </div>
-      <div v-else-if="quote.content">
+      <div v-else-if="quote && quote.content">
         <p>{{ quote.content }}</p>
         <p class="quote-author">{{ quote.author }}</p>
       </div>
@@ -43,6 +55,7 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
 <style scoped>
 .logic-container {
   display: flex;
