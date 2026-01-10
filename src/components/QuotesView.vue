@@ -5,23 +5,23 @@ const quote = ref({})
 const isLoading = ref(true)
 const error = ref(null)
 
-// const fetchQuote = async () => {
-//   isLoading.value = true
-//   error.value = null
-//   try {
-//     const response = await fetch('https://api.quotable.io')
-//     if (!response.ok) {
-//       throw new Error('Failed to fetch a quote.')
-//     }
-//     const data = await response.json()
-//     quote.value = data // API returns a single quote object here.
-//   } catch (err) {
-//     error.value = err
-//     console.error(err)
-//   } finally {
-//     isLoading.value = false
-//   }
-// }
+const fetchQuote = async () => {
+  isLoading.value = true
+  error.value = null
+  try {
+    const response = await fetch('https://zenquotes.io/api/random')
+    if (!response.ok) {
+      throw new Error('Failed to fetch a quote.')
+    }
+    const data = await response.json()
+    quote.value = data // API returns a single quote object here.
+  } catch (err) {
+    error.value = err
+    console.error(err)
+  } finally {
+    isLoading.value = false
+  }
+}
 
 onMounted(() => {
   fetchQuote()
