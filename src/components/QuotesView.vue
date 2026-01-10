@@ -14,7 +14,11 @@ const fetchQuote = async () => {
   isLoading.value = true
   error.value = null
   try {
-    const response = await fetch('https://zenquotes.io/api/random')
+    const response = await fetch('/api/random')
+    console.log('response.ok:', response.ok)
+    console.log('status:', response.status)
+    console.log('statusText:', response.statusText)
+
     if (!response.ok) {
       throw new Error('Failed to fetch a quote.')
     }
