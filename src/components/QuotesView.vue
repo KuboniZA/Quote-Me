@@ -2,8 +2,9 @@
 import { ref, onMounted } from 'vue'
 
 const quote = ref<Quote | null>(null)
+
 const isLoading = ref(true)
-const error = ref<Error | null>(null)
+const error = ref<string | null>(null)
 
 interface Quote {
   content: string
@@ -14,25 +15,24 @@ const fetchQuote = async () => {
   isLoading.value = true
   error.value = null
   try {
-    const response = await fetch('/api/random')
-    console.log('response.ok:', response.ok)
-    console.log('status:', response.status)
-    console.log('statusText:', response.statusText)
+    const response = await fetch('http://127.0.0.1:5000/api/message') // Make sure this matches the backend's url.
+    // console.log('response.ok:', response.ok)
+    // console.log('status:', response.status)
+    // console.log('statusText:', response.statusText)
+    const data = await response.json()
 
     if (!response.ok) {
-      throw new Error('Failed to fetch a quote.')
+      throw new Error(data.error || 'Failed to fetch a quote.')
     }
-    const data = await response.json()
     quote.value = {
       content: data[0].q,
       author: data[0].a,
     }
   } catch (err: unknown) {
     if (err instanceof Error) {
-      error.value = err
-      console.error(err)
+      error.value = err.message
     } else {
-      error.value = new Error(String(err))
+      error.value = String(err)
     }
   } finally {
     isLoading.value = false
@@ -49,10 +49,10 @@ onMounted(() => {
     <div class="quote-container">
       <div v-if="isLoading">Hang tight!<br />Getting you an awesome quote...</div>
       <div v-else-if="error">
-        <p>Error: {{ error.message }}</p>
+        <p>Error: {{ error }}</p>
       </div>
       <div v-else-if="quote && quote.content">
-        <p>{{ quote.content }}</p>
+        <p>"{{ quote.content }}"</p>
         <p class="quote-author">{{ quote.author }}</p>
       </div>
       <button @click="fetchQuote">Get a quote</button>
