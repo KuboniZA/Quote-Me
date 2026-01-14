@@ -52,7 +52,7 @@ onMounted(() => {
         <p>Error: {{ error }}</p>
       </div>
       <div v-else-if="quote && quote.content">
-        <p>"{{ quote.content }}"</p>
+        <p class="quote-content">"{{ quote.content }}"</p>
         <p class="quote-author">{{ quote.author }}</p>
       </div>
       <button @click="fetchQuote">Get a quote</button>
@@ -80,6 +80,9 @@ onMounted(() => {
   font-size: 1.5rem;
   padding: 20px;
   box-shadow: 5px 5px 7px 0.3px black;
+  display: flex;
+  justify-content: center;
+  font-family: 'Merriweather', Georgia, 'Times New Roman', serif;
 }
 button {
   position: absolute;
@@ -93,5 +96,16 @@ button {
 }
 button:hover {
   cursor: pointer;
+}
+.quote-author {
+  position: absolute;
+  left: 50%;
+  translate: -50%;
+  font-weight: bold;
+  top: 7.5rem;
+}
+.quote-content {
+  font-size: 2rem;
+  padding: 0.25rem;
 }
 </style>
